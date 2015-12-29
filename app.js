@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var mongoose = require('mongoose');
 
 var app = express();
 
@@ -58,3 +59,5 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+mongoose.connect("mongodb://127.0.0.1:27017/test")
