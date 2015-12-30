@@ -3,25 +3,53 @@
 var should = require('should');
 var mongoose = require('mongoose');
 var User = require('../lib/user')
+var UserSchema = require('../lib/userSchema')
 
 mongoose.connect("mongodb://127.0.0.1:27017/test")
 
 describe('model test', function() {
 
 	beforeEach(function(done) {
-		User.remove({}, function(err) {
+		UserSchema.remove({}, function(err) {
 			done();
 		});
 	});
 
 	describe('User model test', function() {
 		it ('Should it can be save', function(done) {
-			var user = new User({id: 'userId', password: 'password'});
+			var user = new User(new UserSchema({id: 'userId', password: 'password'}));
 			user.save(function(err, doc) {
 				should.not.exist(err);
-				// should.doc.length.equal(1);
-				console.log(doc);
+
+				User.find(user.user.id, function(err, doc) {
+					should.not.exist(err);
+					doc.length.should.equal(1);
+					done();
+				});
+			});
+		});
+
+		it('Should has not user', function(done) {
+			User.find('userId', function(err, doc) {
+				doc.length.should.equal(0);
 				done();
+			});
+		});
+
+		it('Should update if it was there.', function(done) {
+			var user = new User(new UserSchema({id: 'userId', password: 'password'}));
+			user.save(function(err, doc) {
+				should.not.exist(err);
+
+				user.user.password = 'password2';
+				user.save(function(err, doc) {
+					User.find(user.user.id, function(err, doc) {
+						should.not.exist(err);
+						doc.length.should.equal(1);
+						doc[0].password.should.equal('password2');
+						done();
+					});
+				});
 			});
 		});
 	});
