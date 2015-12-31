@@ -52,5 +52,19 @@ describe('model test', function() {
 				});
 			});
 		});
+
+		it('Should it can be update', function(done) {
+			var user = new User(new UserSchema({id: 'userId', password: 'password'}));
+			user.save(function(err, doc) {
+				user.user.password = 'password2';
+				user.update(function(err, doc) {
+					doc.ok.should.equal(1);
+					User.findOne(user.user.id, function(err, doc) {
+						doc.password.should.equal('password2');
+						done();
+					});
+				});
+			});
+		});
 	});
 });
