@@ -90,5 +90,24 @@ describe('model test', function() {
 					});
 				}]);
 		});
+
+		it('Should remove one', function(done) {
+			async.series([
+				function(fn) {
+					var user = new User(new UserSchema({id: 'userId1', password: 'password'}));
+					user.save(function(err, doc) {
+						user.remove(function(err, doc) {
+							should.not.exist(err);
+							fn(null, 1);
+						});
+					});
+				},
+				function(fn) {
+					User.findAll(function(err, doc) {
+						doc.length.should.equal(0);
+						done();
+					});
+				}]);
+		});
 	});
 });
