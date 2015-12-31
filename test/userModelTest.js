@@ -4,13 +4,14 @@ var should = require('should');
 var mongoose = require('mongoose');
 var User = require('../lib/user')
 var UserSchema = require('../lib/userSchema')
+var async = require('async');
 
 mongoose.connect("mongodb://127.0.0.1:27017/test")
 
 describe('model test', function() {
 
 	beforeEach(function(done) {
-		UserSchema.remove({}, function(err) {
+		User.removeAll(function(err) {
 			done();
 		});
 	});
@@ -26,13 +27,6 @@ describe('model test', function() {
 					doc.length.should.equal(1);
 					done();
 				});
-			});
-		});
-
-		it('Should has not user', function(done) {
-			User.find('userId', function(err, doc) {
-				doc.length.should.equal(0);
-				done();
 			});
 		});
 
@@ -65,6 +59,36 @@ describe('model test', function() {
 					});
 				});
 			});
+		});
+
+		it('Should it remove all', function(done) {
+			async.series([
+				function(fn) {
+					var user = new User(new UserSchema({id: 'userId1', password: 'password'}));
+					user.save(function(err, doc) {
+						fn(null, 1);
+					});
+				},
+				function(fn) {
+					var user = new User(new UserSchema({id: 'userId2', password: 'password'}));
+					user.save(function(err, doc) {
+						fn(null, 2);
+					});
+				}, 
+				function(fn) {
+					User.findAll(function(err, doc) {
+						doc.length.should.equal(2);
+						User.removeAll(function(err, doc) {
+							fn(null, 3);
+						});
+					});
+				},
+				function(fn) {
+					User.findAll(function(err, doc) {
+						doc.length.should.equal(0);
+						done();
+					});
+				}]);
 		});
 	});
 });
