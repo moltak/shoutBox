@@ -20,7 +20,7 @@ describe('Entry model test', function() {
 	});
 
 	it('Should it can be saved.', function(done) {
-		var entry = new Entry(new EntrySchema({data:'{json:data}'}));
+		var entry = new Entry(new EntrySchema({data:'{json:data}', title:'title', userName:'userName'}));
 		entry.save(function(err, doc) {
 			should.not.exist(err);
 			should.exist(doc);
@@ -37,7 +37,7 @@ describe('Entry model test', function() {
 	});
 
 	it('Should return 10 entries', function(done) {
-		Entry.getByrange(0, 1, function(err, doc) {
+		Entry.getRange(0, 1, function(err, doc) {
 			doc.length.should.equal(1);
 			done();
 		});
