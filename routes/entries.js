@@ -4,9 +4,12 @@ var router = express.Router();
 var Entry = require('../lib/entry');
 var EntrySchema = require('../lib/entrySchema');
 var validate = require('../lib/middleware/validate');
+var page = require('../lib/middleware/page');
 
-router.get('/', function(req, res, next) {
-	Entry.getRange(0, -1, function(err, entries) {
+router.get('/', page(Entry.count, 5), function(req, res, next) {
+	var page = req.page;
+
+	Entry.getRange(page.from, page.to, function(err, entries) {
 		if (err) return next(err);
 		res.render('entries', {
 			title: 'Entries',
