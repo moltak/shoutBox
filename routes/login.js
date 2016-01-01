@@ -11,10 +11,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-	var data = req.data.user;
+	var data = req.body.user;
+	if (data == null) {
+		data = ({id: req.body.userid, password: req.body.password})
+	}
+
 	User.authenticate(data.id, data.password, function(err, user) {
 		if (err) return next(err);
-		if (user) {
+
+		if (user != null) {
 			req.session.uid = user.id;
 			res.redirect('/');
 		} else {
