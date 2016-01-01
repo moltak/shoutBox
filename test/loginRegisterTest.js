@@ -2,11 +2,23 @@
 
 var request = require('supertest');
 var should = require('should');
-var app = require('../app');
 var mongoose = require('mongoose');
 var User = require('../lib/user');
+var app = require('../app');
 
 describe('acceptence test', function () {
+	before(function(done) {
+		if (mongoose.connection.readyState != 2) {
+			mongoose.connect("mongodb://127.0.0.1:27017/test")
+		}
+		done();
+	});
+
+	after(function(done) {
+		mongoose.disconnect();
+		done();
+	});
+	
 	beforeEach(function(done) {
 		User.removeAll(function(err) {
 			done();
