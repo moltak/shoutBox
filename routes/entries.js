@@ -23,7 +23,7 @@ router.post('/', function(req, res, next) {
 	var title = req.body.title;
 
 	var entry = new Entry(new EntrySchema({
-		userName: res.locals.user.name,
+		userName: res.locals.user.id,
 		title: title,
 		data: data
 	}));
