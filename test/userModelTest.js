@@ -40,7 +40,6 @@ describe('model test', function() {
 					User.find(user.user.id, function(err, doc) {
 						should.not.exist(err);
 						doc.length.should.equal(1);
-						doc[0].password.should.equal('password2');
 						done();
 					});
 				});
@@ -108,6 +107,14 @@ describe('model test', function() {
 						done();
 					});
 				}]);
+		});
+
+		it('Should hash a password', function(done) {
+			var user = new User(new UserSchema({id:'userId1', password:'password'}));
+			user.save(function(err, doc) {
+				doc.password.should.not.equal('password');
+				done();
+			});
 		});
 	});
 });
