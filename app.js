@@ -8,6 +8,7 @@ var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var user = require('./lib/middleware/user');
 var mongoose = require('mongoose');
 var messages = require('./lib/message');
 var register = require('./routes/register');
@@ -31,6 +32,8 @@ app.use(session({
   secret: 'keyboard cat'
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(user);
+app.use(messages);
 
 app.use('/', routes);
 app.use('/users', users);
