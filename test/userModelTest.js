@@ -116,5 +116,28 @@ describe('model test', function() {
 				done();
 			});
 		});
+
+		it('Should it can be login', function(done) {
+			async.series([
+				function(fn) {
+					var user = new User(new UserSchema({id:'userId1', password:'password'}));
+					user.save(function(err, doc) {
+						fn(null, 1);
+					});
+				},
+				function(fn) {
+					User.authenticate('userId1', 'password', function(err, user) {
+						should.not.exist(err);
+						user.should.have.property('id', 'userId1');
+						done();
+					});
+				}]);
+		});
 	});
 });
+
+
+
+
+
+
