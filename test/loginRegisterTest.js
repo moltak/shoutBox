@@ -6,10 +6,6 @@ var app = require('../app');
 var mongoose = require('mongoose');
 var User = require('../lib/user');
 
-if (mongoose.connection.readyState != 2) {
-	mongoose.connect("mongodb://127.0.0.1:27017/test")
-}
-
 describe('acceptence test', function () {
 	beforeEach(function(done) {
 		User.removeAll(function(err) {
@@ -23,6 +19,17 @@ describe('acceptence test', function () {
 				user:{id:'kh', passowrd:'passowrd'}};
 			request(app)
 				.post('/register')
+				.send(user)
+				.expect(302)
+				.end(done);
+		});
+	});
+
+	describe('login', function () {
+		it('Should can be login', function (done) {
+			var user = {user:{id:'kh', passowrd:'passowrd'}};
+			request(app)
+				.post('/login')
 				.send(user)
 				.expect(302)
 				.end(done);
