@@ -7,7 +7,7 @@ var UserSchema = require('../lib/userSchema');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.render('register', {title: 'Register'});
 });
 
 router.post('/', function(req, res, next) {
@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
 	User.findOne(data.id, function(err, user) {
 		if (err) return next(err);
 
-		if (user.id) {
+		if (user != null) {
 			res.error('Username already taken!');
 			res.redirect('back');
 		} else {

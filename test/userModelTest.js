@@ -6,7 +6,9 @@ var User = require('../lib/user')
 var UserSchema = require('../lib/userSchema')
 var async = require('async');
 
-mongoose.connect("mongodb://127.0.0.1:27017/test")
+if (mongoose.connection.readyState != 2) {
+	mongoose.connect("mongodb://127.0.0.1:27017/test")
+}
 
 describe('model test', function() {
 

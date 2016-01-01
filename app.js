@@ -26,9 +26,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  genid: function(req) {
-    return genuuid() // use UUIDs for session IDs
-  },
   resave: false,
   saveUninitialized: true,
   secret: 'keyboard cat'
