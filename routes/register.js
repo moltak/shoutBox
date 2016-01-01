@@ -12,6 +12,10 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
 	var data = req.body.user;
+	if (data == null) {
+		data = ({id: req.body.userid, password: req.body.password});
+	}
+
 	User.findOne(data.id, function(err, user) {
 		if (err) return next(err);
 
