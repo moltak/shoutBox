@@ -48,29 +48,55 @@ describe('Entry model test', function() {
 	});
 
 	it('Should user has many entries', function(done) {
-		var user = new User(new UserSchema({id:'user2', password:'password'}));
 		async.waterfall([
 			function(fn) {
+				var user = new User(new UserSchema({id:'user2', password:'password'}));
 				user.save(function(err, doc) {
-					fn(null);
+					fn(null, doc);
 				});
 			},
-			function(fn) {
+			function(user, fn) {
+				var entry = getEntry(user, 1);
+				entry.save(function(err, doc) {
+					if (err) return console.error(err);
+					fn(null, user);
+				}) 
+			},
+			function(user, fn) {
+				var entry = getEntry(user, 2);
+				entry.save(function(err, doc) {
+					if (err) return console.error(err);
+					fn(null, user);
+				}) 
+			},
+			function(user, fn) {
+				var entry = getEntry(user, 3);
+				entry.save(function(err, doc) {
+					if (err) return console.error(err);
+					fn(null);
+				}) 
+			},
+			function(fn) { // 
 				User.findOne('user2', function(err, doc) {
 					fn(null, doc);
 				});
 			},
 			function(user, fn) {
-				var entry = new Entry(new EntrySchema(
-					{data:'data', 
-					title:'title', 
-					userName:'userName',
-					user: user}));
-				entry.save(function(err, doc) {
+				Entry.findByUserId(user, function(err, doc) {
 					if (err) return console.error(err);
+					should.not.exist(err);
+					doc.length.should.equal(3);
 					done();
-				}) 
+				});
 			}
 			]);
 	});
+
+	var getEntry = function(user, index) {
+		var entry = new Entry(new EntrySchema(
+			{data:'data' + index,
+			title:'title' + index,
+			user: user}));
+		return entry;
+	};
 });
